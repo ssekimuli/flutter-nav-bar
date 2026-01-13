@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) { 
       if (constraints.maxWidth >= breakpoint) {
          return Scaffold(
-            appBar: AppBar(title: Text('Large Screen View')),
+            appBar: AppBar(title: Text('Large')),
             body: Row(
               children: [
                 SizedBox(
@@ -55,8 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
       } else {
         return Scaffold(
             appBar: AppBar(
-              title: const Text('Small Screen View'),
-              // The leading hamburger icon appears automatically if a Drawer is provided
+              title: const Text('Small'),
             ),
             drawer: const Drawer(
               child: AppMenu(),
