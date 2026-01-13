@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
             body: Row(
               children: [
                 SizedBox(
-                  width: 240,
+                  width: 140,
                   child: AppMenu(),
                 ),
                 Expanded(
@@ -57,8 +57,11 @@ class _MyHomePageState extends State<MyHomePage> {
             appBar: AppBar(
               title: const Text('Small'),
             ),
-            drawer: const Drawer(
-              child: AppMenu(),
+            drawer: SizedBox(
+              width: 110,
+              child: const Drawer(
+                child: AppMenu(),
+              ),
             ),
             body: const Center(child: Text('Main Content Area')),
           );
@@ -75,12 +78,12 @@ class AppMenu extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.zero,
       children: [
-        // const DrawerHeader(
-        //   decoration: BoxDecoration(
-        //     color: Colors.blue,
-        //   ),
-        //   child: Text('Navigation Menu'),
-        // ),
+        const DrawerHeader(
+          decoration: BoxDecoration(
+            color: Colors.blue,
+          ),
+          child: Text('Menu'),
+        ),
         ListTile(
           title: const Text('Home'),
           onTap: () {
