@@ -11,10 +11,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Responsive navigation demo',
+      initialRoute: '/',
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      routes:{
+        '/': (context) => const MyHomePage(title: 'Responsive navigation demo'),
+        '/profile': (context) => Scaffold(
+          appBar: AppBar(title: const Text('Profile')),
+          body: const Center(child: Text('Profile Page')),
+        ),
+        '/settings': (context) => Scaffold(
+          appBar: AppBar(title: const Text('Settings')),
+          body: const Center(child: Text('Settings Page')),
+        ),
+      },
+      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -73,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
 class AppMenu extends StatelessWidget {
   const AppMenu({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -88,18 +101,21 @@ class AppMenu extends StatelessWidget {
           title: const Text('Home'),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, '/');
           },
         ),
         ListTile(
           title: const Text('Profile'),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, '/profile');
           },
         ),
         ListTile(
           title: const Text('Settings'),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, '/settings');
           },
         ),
       ],
