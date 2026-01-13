@@ -50,7 +50,7 @@ class _MainShellState extends State<MainShell> {
           child: AppMenu(
             onItemSelected: (index) {
               setState(() => _selectedIndex = index);
-              Navigator.pop(context); // Close drawer
+              Navigator.pop(context);
             },
           ),
         ),
