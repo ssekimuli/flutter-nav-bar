@@ -10,115 +10,101 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Responsive navigation demo',
-      initialRoute: '/',
+      title: 'Persistent Navigation',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      routes:{
-        '/': (context) => const MyHomePage(title: 'Responsive navigation demo'),
-        '/profile': (context) => Scaffold(
-          appBar: AppBar(title: const Text('Profile')),
-          body: const Center(child: Text('Profile Page')),
-        ),
-        '/settings': (context) => Scaffold(
-          appBar: AppBar(title: const Text('Settings')),
-          body: const Center(child: Text('Settings Page')),
-        ),
-      },
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MainShell(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+class MainShell extends StatefulWidget {
+  const MainShell({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainShell> createState() => _MainShellState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainShellState extends State<MainShell> {
+  int _selectedIndex = 0;
 
-  static const double breakpoint = 600;
+  final List<Widget> _pages = [
+    const Center(child: Text('Home Page Content')),
+    const Center(child: Text('Profile Page Content')),
+    const Center(child: Text('Settings Page Content')),
+  ];
 
-  
+  final List<String> _titles = ['Home', 'Profile', 'Settings'];
 
   @override
   Widget build(BuildContext context) {
-    
-    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) { 
-      if (constraints.maxWidth >= breakpoint) {
-         return Scaffold(
-            appBar: AppBar(title: Text('Large')),
-            body: Row(
-              children: [
-                SizedBox(
-                  width: 140,
-                  child: AppMenu(),
+    const double breakpoint = 600;
+
+    return LayoutBuilder(builder: (context, constraints) {
+      bool isLargeScreen = constraints.maxWidth >= breakpoint;
+
+      return Scaffold(
+        appBar: AppBar(title: Text(_titles[_selectedIndex])),
+        drawer: isLargeScreen ? null : Drawer(
+          child: AppMenu(
+            onItemSelected: (index) {
+              setState(() => _selectedIndex = index);
+              Navigator.pop(context); // Close drawer
+            },
+          ),
+        ),
+        body: Row(
+          children: [
+            if (isLargeScreen)
+              SizedBox(
+                width: 250,
+                child: AppMenu(
+                  onItemSelected: (index) => setState(() => _selectedIndex = index),
                 ),
-                Expanded(
-                  child: Center(child: Text('Main Content Area')),
-                ),
-              ],
-            ),
-          );
-      } else {
-        return Scaffold(
-            appBar: AppBar(
-              title: const Text('Small'),
-            ),
-            drawer: SizedBox(
-              width: 110,
-              child: const Drawer(
-                child: AppMenu(),
               ),
+            Expanded(
+              child: _pages[_selectedIndex],
             ),
-            body: const Center(child: Text('Main Content Area')),
-          );
-      }
+          ],
+        ),
+      );
     });
   }
 }
 
 class AppMenu extends StatelessWidget {
-  const AppMenu({super.key});
-
+  final Function(int) onItemSelected;
+  const AppMenu({super.key, required this.onItemSelected});
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        const DrawerHeader(
-          decoration: BoxDecoration(
-            color: Colors.blue,
+    return Container(
+      color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(color: Colors.blue),
+            child: Text('Menu', style: TextStyle(color: Colors.white)),
           ),
-          child: Text('Menu'),
-        ),
-        ListTile(
-          title: const Text('Home'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.pushNamed(context, '/');
-          },
-        ),
-        ListTile(
-          title: const Text('Profile'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.pushNamed(context, '/profile');
-          },
-        ),
-        ListTile(
-          title: const Text('Settings'),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.pushNamed(context, '/settings');
-          },
-        ),
-      ],
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text('Home'),
+            onTap: () => onItemSelected(0),
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text('Profile'),
+            onTap: () => onItemSelected(1),
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () => onItemSelected(2),
+          ),
+        ],
+      ),
     );
   }
 }
